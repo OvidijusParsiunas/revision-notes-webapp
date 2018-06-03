@@ -1,0 +1,13 @@
+.note-text-area {
+  padding-top: 14px;
+  padding-right: 10px;
+  padding-left: 10px;
+  padding-bottom: 10px;
+  width: 100%;
+  vertical-align: top;
+}
+
+.note-text-area:focus {
+  outline-style: solid;
+  outline-width: 2px;
+}
