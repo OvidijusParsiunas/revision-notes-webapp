@@ -8,7 +8,6 @@ import {HttpClientModule} from '@angular/common/http';
 import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
 import {ScrollToModule} from '@nicky-lenaers/ngx-scroll-to';
 //import {NoteModule} from './notes/note.module';
-import {PopoverModule} from "ngx-popover";
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({

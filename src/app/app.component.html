@@ -6,8 +6,8 @@
 </mat-toolbar>
 <textarea name="outside-text-area"></textarea>
 <div class="notes-container">
-<mat-sidenav-container fullscreen>
-  <mat-sidenav md-menu #sidenav class="notes-sidenav-container">
+<mat-sidenav-container class="example-sidenav-container">
+  <mat-sidenav md-menu #sidenav [fixedInViewport]="true" class="notes-sidenav-container">
     <mat-nav-list>
         <a mat-list-item *ngFor="let topic of topics.topics" (click)="retrieveNotes(topic.title)">{{topic.title}}</a>
       </mat-nav-list>
@@ -20,7 +20,7 @@
             <div style="width: 17px;  float:right; min-height: 72px;" #p="ngbPopover"
   (click)="closeDirective(p)" placement="left" triggers="manual"
                     [ngbPopover]="popContent" >
-              <div *ngIf="hoverable[i]" class="test" style=" margin-left: 3px; margin-top: 20px;">
+              <div *ngIf="hoverable[i]" class="test" style=" margin-left: 2px; margin-top: 20px;">
 
               </div>
 </div>

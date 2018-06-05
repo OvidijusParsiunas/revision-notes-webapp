@@ -2,7 +2,6 @@ import {Component, OnInit, ViewEncapsulation, Inject, Injectable, ViewChild} fro
 import {MatSidenavModule} from '@angular/material';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {DOCUMENT} from '@angular/common';
-import {PopoverModule} from "ngx-popover";
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
 interface noteInterface {
@@ -17,9 +16,6 @@ interface noteInterface {
 })
 @Injectable()
 export class AppComponent implements OnInit{
-
-  @ViewChild('p') public popover;
-
   //array of new note
   //array of edited notes
   //array of deleted notes
@@ -89,34 +85,14 @@ public removeNote(note){
 public mouseLeave2(i){
   this.currentTemplate.close();
 }
-
 public closeDirective(p){
+  console.log(p);
   this.currentTemplate = p;
   this.currentTemplate.toggle();
 }
 
-public textAreaDirty(noteNumber){
-  this.changeText = true;
-  if(this.editedNotes[noteNumber] == undefined){
-    this.editedNotes[noteNumber] = true;
-  }
-}
-
-user = { id : 1, name : 'Hello'};
-
-public save(){
-  const headers = new HttpHeaders()
-          //.set('Authorization', 'my-auth-token')
-          .set('Content-Type', 'application/json');
-    this.http.post('/data/postSomething', JSON.stringify(this.notes),
-  {headers:headers})
-    .subscribe(data => {
-      console.log(data);
-    });
-}
-
 //second deploy
- function identifyOrderOfNotes(){
+ private identifyOrderOfNotes(){
    //use document to get all ids and their order
    //traverse array to find index position that is bigger than the next
  }
