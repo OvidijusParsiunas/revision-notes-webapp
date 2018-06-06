@@ -9,9 +9,8 @@
   margin-top: 64px;
 }
 
-.notes-sidenav-container{
-  margin-top: 64px;
-}
+@media screen and (-ms-high-contrast:active){.notes-container{margin-top: 64px}}
+@media (max-width:599px){.notes-container{margin-top: 56px}}
 
 .topics-toolbar {
   position: fixed;
@@ -25,7 +24,7 @@
   padding-bottom: 10px;
   vertical-align: top;
   min-height: 72px;
-  width: calc(100% - 18px);
+  width: calc(100% - 20px);
 }
 
 .note-text-area:focus {
@@ -59,5 +58,9 @@ h1.application-name{
 .example-sidenav-container {
   /* When the sidenav is fixed, don't constrain the height of the sidenav container. This allows the
      `<body>` to be our scrolling element for mobile layouts. */
-  flex: 1 0 auto;
+  flex: 1;
+}
+
+.template-change{
+  margin-top: 10px;
 }

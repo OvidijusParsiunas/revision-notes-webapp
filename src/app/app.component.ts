@@ -14,6 +14,7 @@ interface noteInterface {
   styleUrls: ['./app.component.css'],
   encapsulation: ViewEncapsulation.None
 })
+
 @Injectable()
 export class AppComponent implements OnInit{
   //array of new note
@@ -73,7 +74,12 @@ export class AppComponent implements OnInit{
       this.currentTemplate.close();
     }
 }
-
+public textAreaDirty(noteNumber){
+  this.changeText = true;
+  if(this.editedNotes[noteNumber] == undefined){
+    this.editedNotes[noteNumber] = true;
+  }
+}
 public removeNote(note){
   if (note > -1) {
     this.notes.splice(note, 1);
@@ -85,11 +91,13 @@ public removeNote(note){
 public mouseLeave2(i){
   this.currentTemplate.close();
 }
+
 public closeDirective(p){
   console.log(p);
   this.currentTemplate = p;
   this.currentTemplate.toggle();
 }
+
 
 //second deploy
  private identifyOrderOfNotes(){
