@@ -4,6 +4,7 @@ var notesController = require('../app-server/notes.controller.js');
 
 router.get('/notes/:title', function(req, res, next) {
   res.json([
+    {id:"0" , text: "note 0"},
     {id:"1" , text: "note 1"},
     {id:"2" , text: "note 2"},
     {id:"3" , text: "note 3"},
