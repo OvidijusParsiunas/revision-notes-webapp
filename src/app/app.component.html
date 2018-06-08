@@ -14,10 +14,10 @@
       </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content id="notesList" class="notes-inner-container">
-    <!-- <div id="sortable"> -->
+    <div id="sortable">
     <div class="note-container" *ngFor="let note of notes; let i = index" [attr.id]="'Location' + i">
         <div style="border: thin solid grey" [style.height]="height" [style.background-color]="backgroundColor[i]" >
-          <div (focus)="focusFunction()" (mouseenter)="hoverEffect(i)" class="experimentalClass" (mouseleave)="mouseLeave(i)"><textarea id="textName" (paste)="textAreaDirty(i)" (keypress)="textAreaDirty(i)" autosize class="note-text-area">{{note.text}}</textarea>
+          <div (focus)="focusFunction()" (mouseenter)="hoverEffect(i)" class="experimentalClass" (mouseleave)="mouseLeave(i)"><textarea (focus)="removeKeyEvent()" id="textName" (paste)="textAreaDirty(note.id)" (keydown)="textAreaDirty(note.id)" autosize class="note-text-area">{{note.text}}</textarea>
             <div style="width: 18px;  float:right;" >
               <div class="dropdown dropleft" style="min-height: 72px">
   <div class="dropleft" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style=" margin-left: 3px;">
@@ -25,9 +25,7 @@
       </div>
   </div>
   <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-    <a class="dropdown-item" (click)="removeNote(i)" href="#">Delete Note</a>
-    <a class="dropdown-item" href="#">Another action</a>
-    <a class="dropdown-item" href="#">Another action</a>
+    <a class="dropdown-item" (click)="removeNote(i, note.id)" href="#">Delete Note</a>
   </div>
 </div>
 </div>
@@ -36,7 +34,10 @@
 </ng-template>
 </div>
     </div></div>
-  <!-- </div> -->
+
+  </div>
+  <textarea (focus)="focused($event)" id="textName" autosize class="note-text-area">asdlhauidhyuoaasdasdsad</textarea>
+  <div id="bottom-div"></div>
   </mat-sidenav-content>
 </mat-sidenav-container>
 </div>

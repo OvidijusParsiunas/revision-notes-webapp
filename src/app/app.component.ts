@@ -5,6 +5,7 @@ import {DOCUMENT} from '@angular/common';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
 interface noteInterface {
+  id: number;
   text: string;
 }
 
@@ -23,7 +24,11 @@ export class AppComponent implements OnInit{
   topics = {};
   notes : noteInterface[] = [];
   newNotesIds = 0;
+  newNotes: noteInterface[] = [];
   editedNotes = {};
+  deletedNotes = {};
+  currentlySelectedHTMLElement = {};
+
   currentTemplate;
   public changeText = false;
   public visible = false;
@@ -31,7 +36,9 @@ export class AppComponent implements OnInit{
   public pointerEvents = "auto";
   public height = "101%";
   public hoverable = {};
+  public hoverable2 = {};
   public backgroundColor = {};
+  public backgroundColor2 = {};
   constructor(@Inject(DOCUMENT) private document: any, private http: HttpClient) { }
 
   ngOnInit() {
@@ -49,11 +56,12 @@ export class AppComponent implements OnInit{
   };
 
 //Opporrtunity to explore the appearance of an invisible textArea if performance drops
+//Adding to a new array to stop the changeEffects from being tracked
   public createNote(){
-    //this.notes.push({"text":"empty"});
-    this.pointerEvents = "none";
-    this.height = "72px";
-    this.read = false;
+    //this.newNotes.push({"text":"empty", "newArray":true});
+    // this.pointerEvents = "none";
+    // this.height = "72px";
+    // this.read = false;
     // var div = document.createElement("note");
     // div.id = "newNote" + this.newNotesIds;
     // document.getElementById("notesList").appendChild(div).focus();
@@ -61,9 +69,15 @@ export class AppComponent implements OnInit{
     // this.visible = true;
   };
 
-  public hoverEffect(i){
-    this.hoverable[i] = true;
-    this.backgroundColor[i] = "rgb(234, 234, 234)";
+//Using new methods in order to have hove effects for the new note elements
+public hoverEffect(i){
+  this.hoverable[i] = true;
+  this.backgroundColor[i] = "rgb(234, 234, 234)";
+}
+
+  public hoverEffectNewNote(i){
+    this.hoverable2[i] = true;
+    this.backgroundColor2[i] = "rgb(234, 234, 234)";
   }
 
   public mouseLeave(i){
@@ -74,16 +88,38 @@ export class AppComponent implements OnInit{
       this.currentTemplate.close();
     }
 }
-public textAreaDirty(noteNumber){
-  this.changeText = true;
-  if(this.editedNotes[noteNumber] == undefined){
-    this.editedNotes[noteNumber] = true;
+
+public mouseLeaveNewNote(i){
+  this.hoverable2[i] = false;
+  this.backgroundColor2[i] = "rgb(250, 250, 250)";
+  console.log('Mouse left');
+  if(this.currentTemplate !== undefined && this.currentTemplate.isOpen()){
+    this.currentTemplate.close();
   }
 }
-public removeNote(note){
+
+public focused(focusedElement){
+  if(this.editedNotes[focusedElement.target.id] == false || this.editedNotes[focusedElement.target.id] == undefined){
+    focusedElement.target.addEventListener('keydown', this.textAreaDirty, false);
+    this.currentlySelectedHTMLElement = focusedElement.target;
+    console.log(this.currentlySelectedHTMLElement);
+  }
+}
+
+//workaround, keep reference of currently selected textbox
+public textAreaDirty(){
+  console.log(JSON.stringify(this.hoverable));
+  console.log('edited notes array properties ' + JSON.stringify(this.editedNotes));
+}
+
+public removeKeyEvent(){
+}
+
+public removeNote(note, noteId){
   if (note > -1) {
     this.notes.splice(note, 1);
   }
+  this.deletedNotes[noteId] = true;
   this.hoverable[note] = false;
   this.backgroundColor[note] = "rgb(250, 250, 250)";
 }
@@ -97,7 +133,6 @@ public closeDirective(p){
   this.currentTemplate = p;
   this.currentTemplate.toggle();
 }
-
 
 //second deploy
  private identifyOrderOfNotes(){
