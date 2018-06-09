@@ -24,10 +24,11 @@ export class AppComponent implements OnInit{
   topics = {};
   notes : noteInterface[] = [];
   newNotesIds = 0;
-  newNotes: noteInterface[] = [];
+  newNotes = {};
   editedNotes = {};
   deletedNotes = {};
   currentlySelectedHTMLElement = {};
+  newNoteId = 0;
 
   currentTemplate;
   public changeText = false;
@@ -54,13 +55,13 @@ export class AppComponent implements OnInit{
       this.notes = data;
     });
   };
-newNoteId = 0;
+
 //Opporrtunity to explore the appearance of an invisible textArea if performance drops
 //Adding to a new array to stop the changeEffects from being tracked
   public createNote(){
     var newNoteDetails = {"id":"New"+this.newNoteId, "text":"empty"}
     this.notes.push(newNoteDetails);
-    this.newNotes.push(newNoteDetails);
+    this.newNotes["New"+this.newNoteId] = true;
     this.newNoteId++;
     // this.pointerEvents = "none";
     // this.height = "72px";
@@ -121,7 +122,13 @@ public removeNote(note, noteId){
   if (note > -1) {
     this.notes.splice(note, 1);
   }
-  this.deletedNotes[noteId] = true;
+  if(noteId.substring(0,1) == 'N')
+  {
+    delete this.newNotes[noteId];
+  }
+  else{
+    this.deletedNotes[noteId] = true;
+  }
   this.hoverable[note] = false;
   this.backgroundColor[note] = "rgb(250, 250, 250)";
 }
