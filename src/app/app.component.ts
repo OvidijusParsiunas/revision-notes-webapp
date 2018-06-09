@@ -98,21 +98,20 @@ public mouseLeaveNewNote(i){
   }
 }
 
+function1 = () => {this.textAreaDirty(this.currentlySelectedHTMLElement, this.editedNotes)};
+
 public focused(focusedElement){
   if(this.editedNotes[focusedElement.target.id] == false || this.editedNotes[focusedElement.target.id] == undefined){
-    focusedElement.target.addEventListener('keydown', this.textAreaDirty, false);
     this.currentlySelectedHTMLElement = focusedElement.target;
-    console.log(this.currentlySelectedHTMLElement);
+    focusedElement.target.addEventListener('keydown', this.function1, false);
   }
 }
 
 //workaround, keep reference of currently selected textbox
-public textAreaDirty(){
-  console.log(JSON.stringify(this.hoverable));
-  console.log('edited notes array properties ' + JSON.stringify(this.editedNotes));
-}
-
-public removeKeyEvent(){
+public textAreaDirty(textNote, editedNotes){
+  console.log('text notes')
+  textNote.removeEventListener('keydown', this.function1, false);
+  editedNotes[textNote.id] = true;
 }
 
 public removeNote(note, noteId){

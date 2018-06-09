@@ -17,7 +17,7 @@
     <div id="sortable">
     <div class="note-container" *ngFor="let note of notes; let i = index" [attr.id]="'Location' + i">
         <div style="border: thin solid grey" [style.height]="height" [style.background-color]="backgroundColor[i]" >
-          <div (focus)="focusFunction()" (mouseenter)="hoverEffect(i)" class="experimentalClass" (mouseleave)="mouseLeave(i)"><textarea (focus)="removeKeyEvent()" id="textName" (paste)="textAreaDirty(note.id)" (keydown)="textAreaDirty(note.id)" autosize class="note-text-area">{{note.text}}</textarea>
+          <div (mouseenter)="hoverEffect(i)" class="experimentalClass" (mouseleave)="mouseLeave(i)"><textarea (focus)="focused($event)" id="textName{{note.id}}" (paste)="textAreaDirty(note.id)" autosize class="note-text-area">{{note.text}}</textarea>
             <div style="width: 18px;  float:right;" >
               <div class="dropdown dropleft" style="min-height: 72px">
   <div class="dropleft" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style=" margin-left: 3px;">
@@ -36,7 +36,6 @@
     </div></div>
 
   </div>
-  <textarea (focus)="focused($event)" id="textName" autosize class="note-text-area">asdlhauidhyuoaasdasdsad</textarea>
   <div id="bottom-div"></div>
   </mat-sidenav-content>
 </mat-sidenav-container>
