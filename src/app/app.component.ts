@@ -5,7 +5,7 @@ import {DOCUMENT} from '@angular/common';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
 interface noteInterface {
-  id: number;
+  id: any;
   text: string;
 }
 
@@ -54,11 +54,14 @@ export class AppComponent implements OnInit{
       this.notes = data;
     });
   };
-
+newNoteId = 0;
 //Opporrtunity to explore the appearance of an invisible textArea if performance drops
 //Adding to a new array to stop the changeEffects from being tracked
   public createNote(){
-    //this.newNotes.push({"text":"empty", "newArray":true});
+    var newNoteDetails = {"id":"New"+this.newNoteId, "text":"empty"}
+    this.notes.push(newNoteDetails);
+    this.newNotes.push(newNoteDetails);
+    this.newNoteId++;
     // this.pointerEvents = "none";
     // this.height = "72px";
     // this.read = false;
@@ -101,7 +104,8 @@ public mouseLeaveNewNote(i){
 function1 = () => {this.textAreaDirty(this.currentlySelectedHTMLElement, this.editedNotes)};
 
 public focused(focusedElement){
-  if(this.editedNotes[focusedElement.target.id] == false || this.editedNotes[focusedElement.target.id] == undefined){
+  console.log(JSON.stringify(this.editedNotes));
+if(this.editedNotes[focusedElement.target.id] == false || this.editedNotes[focusedElement.target.id] == undefined){
     this.currentlySelectedHTMLElement = focusedElement.target;
     focusedElement.target.addEventListener('keydown', this.function1, false);
   }
@@ -109,7 +113,6 @@ public focused(focusedElement){
 
 //workaround, keep reference of currently selected textbox
 public textAreaDirty(textNote, editedNotes){
-  console.log('text notes')
   textNote.removeEventListener('keydown', this.function1, false);
   editedNotes[textNote.id] = true;
 }
