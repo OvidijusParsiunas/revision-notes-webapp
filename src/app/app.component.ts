@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewEncapsulation, Inject, Injectable, ViewChild} from '@angular/core';
+import {Component, OnInit, ViewEncapsulation, Inject, Injectable, ViewChildren} from '@angular/core';
 import {MatSidenavModule} from '@angular/material';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {DOCUMENT} from '@angular/common';
@@ -18,6 +18,27 @@ interface noteInterface {
 
 @Injectable()
 export class AppComponent implements OnInit{
+  @ViewChildren('notesTemplate') generatedNotes;
+  save = () => {
+    this.parseRequiredSavedNotesForSending(this.generatedNotes.toArray().map(x => x.nativeElement));
+  }
+
+  private parseRequiredSavedNotesForSending(notes){
+    for(let i in notes){
+      let textAreaProperties = notes[i].children[0].children[0].children[0];
+      if(this.editedNotes[textAreaProperties.id]){
+        this.editedNotes[textAreaProperties.id] = textAreaProperties.value;
+      };
+      if(this.newNotes[textAreaProperties.id]){
+        this.newNotes[textAreaProperties.id] = textAreaProperties.value;
+      }
+    }
+    var postBody = {};
+    postBody['editedNotes'] = this.editedNotes;
+    postBody['newNotes'] = this.newNotes;
+    postBody['deletedNotes'] = this.deletedNotes;
+    console.log(JSON.stringify(postBody));
+  }
   //array of new note
   //array of edited notes
   //array of deleted notes
@@ -59,6 +80,7 @@ export class AppComponent implements OnInit{
 //Opporrtunity to explore the appearance of an invisible textArea if performance drops
 //Adding to a new array to stop the changeEffects from being tracked
   public createNote(){
+    this.changeText = true;
     var newNoteDetails = {"id":"New"+this.newNoteId, "text":"empty"}
     this.notes.push(newNoteDetails);
     this.newNotes["New"+this.newNoteId] = true;
@@ -105,22 +127,28 @@ public mouseLeaveNewNote(i){
 function1 = () => {this.textAreaDirty(this.currentlySelectedHTMLElement, this.editedNotes)};
 
 public focused(focusedElement){
-  console.log(JSON.stringify(this.editedNotes));
-if(this.editedNotes[focusedElement.target.id] == false || this.editedNotes[focusedElement.target.id] == undefined){
-    this.currentlySelectedHTMLElement = focusedElement.target;
-    focusedElement.target.addEventListener('keydown', this.function1, false);
+  if(focusedElement.target.id.substring(0,1) != 'N'){
+    if(this.editedNotes[focusedElement.target.id] == false || this.editedNotes[focusedElement.target.id] == undefined){
+      this.currentlySelectedHTMLElement = focusedElement.target;
+      focusedElement.target.addEventListener('keydown', this.function1, false);
+    }
   }
 }
 
 //workaround, keep reference of currently selected textbox
 public textAreaDirty(textNote, editedNotes){
+  this.changeText = true;
   textNote.removeEventListener('keydown', this.function1, false);
   editedNotes[textNote.id] = true;
+  console.log('done listening');
 }
 
 public removeNote(note, noteId){
   if (note > -1) {
     this.notes.splice(note, 1);
+  }
+  if(this.editedNotes[noteId]== true){
+    delete this.editedNotes[noteId];
   }
   if(noteId.substring(0,1) == 'N')
   {

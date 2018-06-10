@@ -2,7 +2,7 @@
 <mat-toolbar color="primary" class="topics-toolbar">
     <button mat-icon-button (click)="sidenav.toggle()" class="sidenav-toggle-button"><mat-icon>menu</mat-icon></button>
     <button mat-icon-button [ngx-scroll-to]="'#bottom-div'" (click)="createNote()" class="create-new-note-button"><mat-icon>add</mat-icon></button>
-    <button mat-icon-button (click)="save()"*ngIf="changeText" class="sidenav-toggle-button"><mat-icon>save</mat-icon></button>
+    <button mat-icon-button (click)="save()" *ngIf="changeText" class="sidenav-toggle-button"><mat-icon>save</mat-icon></button>
     <h1 class="application-name">Note Application</h1>
 </mat-toolbar>
 <textarea name="outside-text-area"></textarea>
@@ -15,9 +15,9 @@
   </mat-sidenav>
   <mat-sidenav-content id="notesList" class="notes-inner-container">
     <div id="sortable">
-    <div class="note-container" *ngFor="let note of notes; let i = index" [attr.id]="'Location' + i">
+    <div class="note-container" #notesTemplate *ngFor="let note of notes; let i = index" [attr.id]="'Location' + i">
         <div style="border: thin solid grey" [style.height]="height" [style.background-color]="backgroundColor[i]" >
-          <div (mouseenter)="hoverEffect(i)" class="experimentalClass" (mouseleave)="mouseLeave(i)"><textarea (focus)="focused($event)" id="textName{{note.id}}" (paste)="textAreaDirty(note.id)" autosize class="note-text-area">{{note.text}}</textarea>
+          <div (mouseenter)="hoverEffect(i)" class="experimentalClass" (mouseleave)="mouseLeave(i)"><textarea (focus)="focused($event)" id="{{note.id}}" (paste)="textAreaDirty(note.id)" autosize class="note-text-area">{{note.text}}</textarea>
             <div style="width: 18px;  float:right;" >
               <div class="dropdown dropleft" style="min-height: 72px">
   <div class="dropleft" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style=" margin-left: 3px;">
