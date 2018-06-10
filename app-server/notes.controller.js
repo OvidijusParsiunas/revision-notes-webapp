@@ -1,9 +1,13 @@
 exports.saveNotes = function(req, res) {
   notes = req.body;
   res.status(200);
+    //respond with all the notes
+    //if latency is an issue, respond with IDs for the new notes
+    //replacement of the old ids
     res.json({
       "note":"successfull-return"
     });
+    console.log(JSON.stringify(notes));
 }
 
 function compareNotes(localNote, clientNote){

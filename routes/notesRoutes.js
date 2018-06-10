@@ -129,6 +129,6 @@ router.get('/topics', function(req, res, next) {
   });
 });
 
-router.post('/postSomething', notesController.saveNotes);
+router.post('/savedNotes', notesController.saveNotes);
 
 module.exports = router;

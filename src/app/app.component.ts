@@ -38,6 +38,8 @@ export class AppComponent implements OnInit{
     postBody['newNotes'] = this.newNotes;
     postBody['deletedNotes'] = this.deletedNotes;
     console.log(JSON.stringify(postBody));
+    this.sendSavedNotes(postBody);
+    this.purgeSavedData();
   }
   //array of new note
   //array of edited notes
@@ -77,6 +79,10 @@ export class AppComponent implements OnInit{
     });
   };
 
+  private sendSavedNotes(body){
+    this.http.post('/data/savedNotes', body).subscribe(res => console.log(JSON.stringify(res)));
+  }
+
 //Opporrtunity to explore the appearance of an invisible textArea if performance drops
 //Adding to a new array to stop the changeEffects from being tracked
   public createNote(){
@@ -94,6 +100,12 @@ export class AppComponent implements OnInit{
     // this.newNotesIds++;
     // this.visible = true;
   };
+
+  public purgeSavedData(){
+    this.editedNotes = {};
+    this.newNotes = {};
+    this.deletedNotes = {};
+  }
 
 //Using new methods in order to have hove effects for the new note elements
 public hoverEffect(i){
