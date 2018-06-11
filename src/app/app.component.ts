@@ -163,6 +163,7 @@ public removeNote(note, noteId){
   if(this.editedNotes[noteId]== true){
     delete this.editedNotes[noteId];
   }
+  
   if(noteId.substring(0,1) == 'N')
   {
     delete this.newNotes[noteId];

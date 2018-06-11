@@ -25,7 +25,24 @@ function addNewNotes(newNotes){
 }
 
 function updateEditedNotes(editedNotes){
-  //console.log('Edited notes ' + JSON.stringify(editedNotes));
+  const orderedEditedNotes = orderKeys(editedNotes);
+  for(var key in orderedEditedNotes){
+    var notesIndex = 0;
+    for(notesIndex; notesIndex < notes.length; notesIndex++){
+      if(notes[notesIndex].id == key){
+        notes[notesIndex].text = orderedEditedNotes[key];
+        break;
+      }
+    }
+  }
+}
+
+function orderKeys(JSONObjects){
+  const ordered = {};
+  Object.keys(JSONObjects).sort().forEach(function(key) {
+    ordered[key] = JSONObjects[key];
+  });
+  return ordered;
 }
 
 function removeDeletedNotes(deletedNotes){
@@ -42,7 +59,6 @@ function removeDeletedNotes(deletedNotes){
     delete notes[identifiedValues[key]];
   }
   notes = filter_array(notes);
-  console.log(JSON.stringify(notes));
 }
 
 function filter_array(test_array) {
