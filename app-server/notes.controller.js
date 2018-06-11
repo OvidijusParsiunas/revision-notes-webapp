@@ -29,16 +29,46 @@ function updateEditedNotes(editedNotes){
 }
 
 function removeDeletedNotes(deletedNotes){
-  //console.log('Removed notes ' + JSON.stringify(deletedNotes));
+  var identifiedValues = {};
+  for(var key in deletedNotes){
+    var val = key;
+    notes.find(function(item, i){
+      if(item.id == val){
+        identifiedValues[key] = i;
+      }
+    })
+  }
+  for(var key in identifiedValues){
+    delete notes[identifiedValues[key]];
+  }
+  notes = filter_array(notes);
+  console.log(JSON.stringify(notes));
+}
+
+function filter_array(test_array) {
+    let index = -1;
+    const arr_length = test_array ? test_array.length : 0;
+    let resIndex = -1;
+    const result = [];
+
+    while (++index < arr_length) {
+        const value = test_array[index];
+
+        if (value) {
+            result[++resIndex] = value;
+        }
+    }
+
+    return result;
 }
 
 var notes = [
-  {id:"0" , text: "note 0"},
-  {id:"1" , text: "note 1"},
-  {id:"2" , text: "note 2"},
-  {id:"3" , text: "note 3"},
-  {id:"4" , text: "note 4"},
-  {id:"5" , text: "note 1"},
-  {id:"6" , text: "note 2"},
-  {id:"7" , text: "note 3"},
-  {id:"8" , text: "note 4"}];
+  {id:"10" , text: "note 0"},
+  {id:"11" , text: "note 1"},
+  {id:"12" , text: "note 2"},
+  {id:"13" , text: "note 3"},
+  {id:"14" , text: "note 4"},
+  {id:"15" , text: "note 1"},
+  {id:"16" , text: "note 2"},
+  {id:"17" , text: "note 3"},
+  {id:"18" , text: "note 4"}];

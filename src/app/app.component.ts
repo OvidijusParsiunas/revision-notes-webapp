@@ -41,6 +41,7 @@ export class AppComponent implements OnInit{
     this.sendSavedNotes(postBody);
     this.purgeSavedData();
   }
+
   //array of new note
   //array of edited notes
   //array of deleted notes
@@ -167,6 +168,7 @@ public removeNote(note, noteId){
     delete this.newNotes[noteId];
   }
   else{
+    this.changeText = true;
     this.deletedNotes[noteId] = true;
   }
   this.hoverable[note] = false;
