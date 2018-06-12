@@ -1,15 +1,15 @@
 exports.saveNotes = function(req, res) {
   var savedNotes = req.body;
+  var newIDs = addNewNotes(savedNotes.newNotes);
+  updateEditedNotes(savedNotes.editedNotes);
+  removeDeletedNotes(savedNotes.deletedNotes);
   res.status(200);
-    //respond with all the notes
-    //if latency is an issue, respond with IDs for the new notes
-    //replacement of the old IDs
-    res.json({
-      "note":"successfull-return"
-    });
-    var newIDs = addNewNotes(savedNotes.newNotes);
-    updateEditedNotes(savedNotes.editedNotes);
-    removeDeletedNotes(savedNotes.deletedNotes);
+  //respond with all the notes
+  //if latency is an issue, respond with IDs for the new notes
+  //replacement of the old IDs
+  res.json({newIDs,
+    "note":"successfull-return"
+  });
 }
 
 var number = 73;

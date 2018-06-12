@@ -9,6 +9,11 @@ interface noteInterface {
   text: string;
 }
 
+interface postResponse{
+  newIDs: {[key: string] : number};
+  note: string;
+}
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -81,9 +86,24 @@ export class AppComponent implements OnInit{
   };
 
   private sendSavedNotes(body){
-    this.http.post('/data/savedNotes', body).subscribe(res => console.log(JSON.stringify(res)));
+    this.http.post('/data/savedNotes', body).subscribe(res => {
+      console.log(JSON.stringify(res));
+      var response = res as postResponse;
+      this.applyIDsToNewNotes(response.newIDs);
+    });
   }
 
+  private applyIDsToNewNotes(Ids){
+    for(var id in Ids){
+      var notesIndex = 0;
+      for(notesIndex; notesIndex < this.notes.length; notesIndex++){
+        if(this.notes[notesIndex].id == id){
+          this.notes[notesIndex].id = String(Ids[id]);
+          break;
+        }
+      }
+    }
+  }
 //Opporrtunity to explore the appearance of an invisible textArea if performance drops
 //Adding to a new array to stop the changeEffects from being tracked
   public createNote(){
@@ -163,7 +183,7 @@ public removeNote(note, noteId){
   if(this.editedNotes[noteId]== true){
     delete this.editedNotes[noteId];
   }
-  
+
   if(noteId.substring(0,1) == 'N')
   {
     delete this.newNotes[noteId];
