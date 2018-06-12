@@ -46,17 +46,15 @@ function orderKeys(JSONObjects){
 }
 
 function removeDeletedNotes(deletedNotes){
-  var identifiedValues = {};
-  for(var key in deletedNotes){
-    var val = key;
-    notes.find(function(item, i){
-      if(item.id == val){
-        identifiedValues[key] = i;
+  const orderedDeletedNotes = orderKeys(deletedNotes);
+  for(var key in orderedDeletedNotes){
+    var notesIndex = 0;
+    for(notesIndex; notesIndex < notes.length; notesIndex++){
+      if(notes[notesIndex] != null && notes[notesIndex].id == key){
+        delete notes[notesIndex];
+        break;
       }
-    })
-  }
-  for(var key in identifiedValues){
-    delete notes[identifiedValues[key]];
+    }
   }
   notes = filter_array(notes);
 }
