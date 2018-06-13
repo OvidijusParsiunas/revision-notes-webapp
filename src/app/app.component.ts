@@ -7,10 +7,12 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 interface noteInterface {
   id: any;
   text: string;
+  version: any;
 }
 
 interface postResponse{
   newIDs: {[key: string] : number};
+  editedNotesVersions: {[key: string] : number};
   note: string;
 }
 
@@ -28,13 +30,15 @@ export class AppComponent implements OnInit{
     this.parseRequiredSavedNotesForSending(this.generatedNotes.toArray().map(x => x.nativeElement));
   }
 
+  //assembling the note id on the client side is much more performant as we do not need to iterate through the full array twice on the server side
   private parseRequiredSavedNotesForSending(notes){
     for(let i in notes){
       let textAreaProperties = notes[i].children[0].children[0].children[0];
       if(this.editedNotes[textAreaProperties.id]){
-        this.editedNotes[textAreaProperties.id] = textAreaProperties.value;
+        this.editedNotes[textAreaProperties.id] = {"text":textAreaProperties.value,"version":this.editedNotes[textAreaProperties.id]};
       };
       if(this.newNotes[textAreaProperties.id]){
+        //this.newNotes[textAreaProperties.id] = {"text":textAreaProperties.value,"version":version};
         this.newNotes[textAreaProperties.id] = textAreaProperties.value;
       }
     }
@@ -44,7 +48,6 @@ export class AppComponent implements OnInit{
     postBody['deletedNotes'] = this.deletedNotes;
     console.log(JSON.stringify(postBody));
     this.sendSavedNotes(postBody);
-    this.purgeSavedData();
   }
 
   //array of new note
@@ -54,11 +57,13 @@ export class AppComponent implements OnInit{
   notes : noteInterface[] = [];
   newNotesIds = 0;
   newNotes = {};
+  newNotesWithParsedIDs = {};
   editedNotes = {};
+  editedNotesWithParsedIDs = {};
   deletedNotes = {};
   currentlySelectedHTMLElement = {};
   newNoteId = 0;
-
+  currentElementVersion = 0;
   currentTemplate;
   public changeText = false;
   public visible = false;
@@ -78,6 +83,7 @@ export class AppComponent implements OnInit{
         this.topics = data;
     });
   }
+  
 
   public retrieveNotes(title){
     this.http.get<noteInterface[]>('/data/notes/' + title).subscribe(data => {
@@ -89,26 +95,29 @@ export class AppComponent implements OnInit{
     this.http.post('/data/savedNotes', body).subscribe(res => {
       console.log(JSON.stringify(res));
       var response = res as postResponse;
-      this.applyIDsToNewNotes(response.newIDs);
+      this.applyIDsToNewNotes(response.newIDs, response.editedNotesVersions);
     });
   }
 
-  private applyIDsToNewNotes(Ids){
-    for(var id in Ids){
+  private applyIDsToNewNotes(Ids, newEditedNotesVersions){
       var notesIndex = 0;
       for(notesIndex; notesIndex < this.notes.length; notesIndex++){
-        if(this.notes[notesIndex].id == id){
-          this.notes[notesIndex].id = String(Ids[id]);
-          break;
+        if(Ids[this.notes[notesIndex].id]){
+          this.notes[notesIndex].id = String(Ids[this.notes[notesIndex].id]);
+        }
+        else if(newEditedNotesVersions[this.notes[notesIndex].id]){
+          this.notes[notesIndex].version = newEditedNotesVersions[this.notes[notesIndex].id];
         }
       }
+      console.log(JSON.stringify(this.notes));
+      this.purgeSavedData();
     }
-  }
+
 //Opporrtunity to explore the appearance of an invisible textArea if performance drops
 //Adding to a new array to stop the changeEffects from being tracked
   public createNote(){
     this.changeText = true;
-    var newNoteDetails = {"id":"New"+this.newNoteId, "text":"empty"}
+    var newNoteDetails = {"id":"New"+this.newNoteId, "text":"empty", "version":1}
     this.notes.push(newNoteDetails);
     this.newNotes["New"+this.newNoteId] = true;
     this.newNoteId++;
@@ -159,10 +168,12 @@ public mouseLeaveNewNote(i){
 
 function1 = () => {this.textAreaDirty(this.currentlySelectedHTMLElement, this.editedNotes)};
 
-public focused(focusedElement){
+public focused(focusedElement, version){
   if(focusedElement.target.id.substring(0,1) != 'N'){
     if(this.editedNotes[focusedElement.target.id] == false || this.editedNotes[focusedElement.target.id] == undefined){
+      console.log('focused has been called');
       this.currentlySelectedHTMLElement = focusedElement.target;
+      this.currentElementVersion = version;
       focusedElement.target.addEventListener('keydown', this.function1, false);
     }
   }
@@ -172,15 +183,15 @@ public focused(focusedElement){
 public textAreaDirty(textNote, editedNotes){
   this.changeText = true;
   textNote.removeEventListener('keydown', this.function1, false);
-  editedNotes[textNote.id] = true;
-  console.log('done listening');
+  editedNotes[textNote.id] = this.currentElementVersion;
+  console.log(JSON.stringify(editedNotes));
 }
 
-public removeNote(note, noteId){
+public removeNote(note, noteId, version){
   if (note > -1) {
     this.notes.splice(note, 1);
   }
-  if(this.editedNotes[noteId]== true){
+  if(this.editedNotes[noteId] == true){
     delete this.editedNotes[noteId];
   }
 
@@ -190,7 +201,8 @@ public removeNote(note, noteId){
   }
   else{
     this.changeText = true;
-    this.deletedNotes[noteId] = true;
+    console.log(noteId);
+    this.deletedNotes[noteId] = version;
   }
   this.hoverable[note] = false;
   this.backgroundColor[note] = "rgb(250, 250, 250)";

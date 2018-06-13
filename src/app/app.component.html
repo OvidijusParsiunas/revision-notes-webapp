@@ -17,7 +17,7 @@
     <div id="sortable">
     <div class="note-container" #notesTemplate *ngFor="let note of notes; let i = index" [attr.id]="'Location' + i">
         <div style="border: thin solid grey" [style.height]="height" [style.background-color]="backgroundColor[i]" >
-          <div (mouseenter)="hoverEffect(i)" class="experimentalClass" (mouseleave)="mouseLeave(i)"><textarea (focus)="focused($event)" id="{{note.id}}" (paste)="textAreaDirty(note.id)" autosize class="note-text-area">{{note.text}}</textarea>
+          <div (mouseenter)="hoverEffect(i)" class="experimentalClass" (mouseleave)="mouseLeave(i)"><textarea (focus)="focused($event, note.version)" id="{{note.id}}" (paste)="textAreaDirty(note.id)" autosize class="note-text-area">{{note.text}}</textarea>
             <div style="width: 18px;  float:right;" >
               <div class="dropdown dropleft" style="min-height: 72px">
   <div class="dropleft" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style=" margin-left: 3px;">
@@ -25,7 +25,7 @@
       </div>
   </div>
   <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-    <a class="dropdown-item" (click)="removeNote(i, note.id)" href="#">Delete Note</a>
+    <a class="dropdown-item" (click)="removeNote(i, note.id, note.version)" href="#">Delete Note</a>
   </div>
 </div>
 </div>
