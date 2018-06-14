@@ -83,7 +83,6 @@ export class AppComponent implements OnInit{
         this.topics = data;
     });
   }
-  
 
   public retrieveNotes(title){
     this.http.get<noteInterface[]>('/data/notes/' + title).subscribe(data => {
@@ -96,7 +95,7 @@ export class AppComponent implements OnInit{
       console.log(JSON.stringify(res));
       var response = res as postResponse;
       this.applyIDsToNewNotes(response.newIDs, response.editedNotesVersions);
-    });
+    }, err => {console.log(JSON.stringify(err.error))});
   }
 
   private applyIDsToNewNotes(Ids, newEditedNotesVersions){

@@ -4,19 +4,32 @@ exports.saveNotes = function(req, res) {
   updateEditedNotes(savedNotes.editedNotes);
   removeDeletedNotes(savedNotes.deletedNotes);
   /////////////////////////!!!!Can still add new note version on the client side
-  res.status(returnCode);
-  //respond with all the notes
-  //if latency is an issue, respond with IDs for the new notes
-  //replacement of the old IDs
-  res.json({newIDs, editedNotesVersions,
-    "note":"successfull-return"
-  });
+
+  //seperate into their own functions
+  if(!conflict){
+    res.status(200);
+    //respond with all the notes
+    //if latency is an issue, respond with IDs for the new notes
+    //replacement of the old IDs
+    res.json({newIDs, editedNotesVersions,
+      "note":"successfull-return"
+    });
+  }
+  else{
+    res.status(409);
+    res.json({conflictingEditedNotes, conflictingDeletedNotes, conflictingEditingDeletedNotes});
+  }
   editedNotesVersions = {};
 }
 
 var number = 73;
 var editedNotesVersions = {};
+var conflictingEditedNotes = {};
+var conflictingDeletedNotes = {};
+var conflictingEditingDeletedNotes = {};
 var returnCode = 200;
+var conflict = false;
+
 function addNewNotes(newNotes){
   var newIDs = {};
   for(var key in newNotes){
@@ -36,13 +49,19 @@ function updateEditedNotes(editedNotes){
         if(notes[notesIndex].version == orderedEditedNotes[key].version){
           notes[notesIndex].text = orderedEditedNotes[key].text;
           editedNotesVersions[key] = ++notes[notesIndex].version;
-          console.log('same versions of notes');
         }
         else{
+          conflict = true;
+          conflictingEditedNotes[key] = {"server": notes[notesIndex].text, "client": orderedEditedNotes[key].text};
           console.log('we have a conflict');
         }
-        break;
+      break;
       }
+    }
+    if(notesIndex == notes.length){
+      console.log('we got to the end');
+      conflict = true;
+      conflictingEditingDeletedNotes[key] = orderedEditedNotes[key].text;
     }
   }
 }
@@ -61,7 +80,13 @@ function removeDeletedNotes(deletedNotes){
     var notesIndex = 0;
     for(notesIndex; notesIndex < notes.length; notesIndex++){
       if(notes[notesIndex] != null && notes[notesIndex].id == key){
-        delete notes[notesIndex];
+        if(notes[notesIndex].version == orderedDeletedNotes[key]){
+          delete notes[notesIndex];
+        }
+        else{
+          conflict = true;
+          conflictingDeletedNotes[key] = notes[notesIndex].text;
+        }
         break;
       }
     }
