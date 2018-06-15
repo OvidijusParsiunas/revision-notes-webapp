@@ -95,7 +95,8 @@ export class AppComponent implements OnInit{
       console.log(JSON.stringify(res));
       var response = res as postResponse;
       this.applyIDsToNewNotes(response.newIDs, response.editedNotesVersions);
-    }, err => {console.log(JSON.stringify(err.error))});
+    }, err => {
+      console.log(JSON.stringify(err.error))});
   }
 
   private applyIDsToNewNotes(Ids, newEditedNotesVersions){
