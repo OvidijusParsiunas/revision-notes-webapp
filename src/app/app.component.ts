@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewEncapsulation, Inject, Injectable, ViewChildren} from '@angular/core';
+import {Component, OnInit, ViewEncapsulation, Inject, Injectable, ViewChildren, ViewChild} from '@angular/core';
 import {MatSidenavModule} from '@angular/material';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {DOCUMENT} from '@angular/common';
@@ -28,6 +28,14 @@ export class AppComponent implements OnInit{
   @ViewChildren('notesTemplate') generatedNotes;
   save = () => {
     this.parseRequiredSavedNotesForSending(this.generatedNotes.toArray().map(x => x.nativeElement));
+  }
+
+  @ViewChild('modalButton') modalButton;
+  public openModal(){
+    let el: HTMLElement = this.modalButton.nativeElement as HTMLElement;
+    el.click();
+    //use this if performance is an issue
+    //document.getElementById("triggerModal").click();
   }
 
   //assembling the note id on the client side is much more performant as we do not need to iterate through the full array twice on the server side
@@ -74,7 +82,8 @@ export class AppComponent implements OnInit{
   public hoverable2 = {};
   public backgroundColor = {};
   public backgroundColor2 = {};
-  constructor(@Inject(DOCUMENT) private document: any, private http: HttpClient) { }
+  public name = 'my name is Ovidijus .';
+constructor(@Inject(DOCUMENT) private document: any, private http: HttpClient) { }
 
   ngOnInit() {
     this.retrieveNotes('initialNotes');

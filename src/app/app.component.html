@@ -2,7 +2,7 @@
 <mat-toolbar color="primary" class="topics-toolbar">
     <button mat-icon-button (click)="sidenav.toggle()" class="sidenav-toggle-button"><mat-icon>menu</mat-icon></button>
     <button mat-icon-button [ngx-scroll-to]="'#bottom-div'" (click)="createNote()" class="create-new-note-button"><mat-icon>add</mat-icon></button>
-    <button mat-icon-button (click)="save()" *ngIf="changeText" class="sidenav-toggle-button"><mat-icon>save</mat-icon></button>
+    <button mat-icon-button (click)="openModal()" *ngIf="changeText" class="sidenav-toggle-button"><mat-icon>save</mat-icon></button>
     <h1 class="application-name">Note Application</h1>
 </mat-toolbar>
 <textarea name="outside-text-area"></textarea>
@@ -36,23 +36,25 @@
     </div></div>
 
   </div>
-  <!-- Button trigger modal -->
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
-  Launch demo modal
-</button>
+  <div id="bottom-div"></div>
+  </mat-sidenav-content>
+</mat-sidenav-container>
+</div>
+</div>
 
-<!-- Modal -->
-<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<div #modalButton [hidden]='true' id="triggerModal" data-toggle="modal" data-backdrop="static" data-target="#conflictModal">
+</div>
+<div class="modal fade" id="conflictModal" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+        <h5 class="modal-title">Modal title</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-        ...
+        {{name}}
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -60,9 +62,4 @@
       </div>
     </div>
   </div>
-</div>
-  <div id="bottom-div"></div>
-  </mat-sidenav-content>
-</mat-sidenav-container>
-</div>
 </div>

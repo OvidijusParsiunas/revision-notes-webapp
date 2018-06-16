@@ -17,10 +17,6 @@
   z-index: 2;
 }
 
-body.modal-open div.modal-backdrop {
-    z-index: 0;
-}
-
 .note-text-area {
   padding-top: 14px;
   padding-right: 10px;
