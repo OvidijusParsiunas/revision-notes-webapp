@@ -17,7 +17,7 @@
     <div id="sortable">
     <div class="note-container" #notesTemplate *ngFor="let note of notes; let i = index" [attr.id]="'Location' + i">
         <div style="border: thin solid grey" [style.height]="height" [style.background-color]="backgroundColor[i]" >
-          <div (mouseenter)="hoverEffect(i)" class="experimentalClass" (mouseleave)="mouseLeave(i)"><textarea (focus)="focused($event, note.version)" id="{{note.id}}" (paste)="textAreaDirty(note.id)" autosize class="note-text-area">{{note.text}}</textarea>
+          <div (mouseenter)="hoverEffect(i)" class="experimentalClass" (mouseleave)="mouseLeave(i)"><textarea (focus)="focused($event, note.version)" id="{{note.id}}" (paste)="textAreaDirty(note.id)" autosize class="note-text-area" [disabled]="editable">{{note.text}}</textarea>
             <div style="width: 18px;  float:right;" >
               <div class="dropdown dropleft" style="min-height: 72px">
   <div class="dropleft" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style=" margin-left: 3px;">
@@ -48,13 +48,17 @@
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Modal title</h5>
+        <h5 class="modal-title">Conflicting notes</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-        {{name}}
+        One or more notes that you edited have been updated by another user, please review and make changes accordingly:
+        <br>
+        <br>
+        <h4>Their code:</h4>
+        <textarea class="note-text-area">Your text positioned here</textarea>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

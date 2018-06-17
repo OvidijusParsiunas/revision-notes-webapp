@@ -34,9 +34,11 @@ export class AppComponent implements OnInit{
   public openModal(){
     let el: HTMLElement = this.modalButton.nativeElement as HTMLElement;
     el.click();
+    //this.editable = true;
     //use this if performance is an issue
     //document.getElementById("triggerModal").click();
   }
+
 
   //assembling the note id on the client side is much more performant as we do not need to iterate through the full array twice on the server side
   private parseRequiredSavedNotesForSending(notes){
@@ -83,6 +85,7 @@ export class AppComponent implements OnInit{
   public backgroundColor = {};
   public backgroundColor2 = {};
   public name = 'my name is Ovidijus .';
+  public editable = false;
 constructor(@Inject(DOCUMENT) private document: any, private http: HttpClient) { }
 
   ngOnInit() {

@@ -35,6 +35,7 @@
 .note-container{
   border-width: 1px;
   border-color: rgb(169, 169, 169);
+  /*pointer-events: none;*/
 }
 
 .test:after {
